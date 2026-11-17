@@ -20,6 +20,7 @@ All inputs are public:
 - Census American Community Survey commuting table B08301 (2015-2019 and 2019-2023)
 - OMB 2023 metro delineations and the 2020 Census Gazetteer
 - Baum-Snow and Han (2024, JPE) tract-level supply elasticities
+- The PCE price index (BEA, via FRED)
 
 ## Part 1: counties (sc-county-v1)
 
@@ -76,31 +77,52 @@ The same test is run on metros (LMW's unit) and within metros.
   `remote.py` at commit 0e6c10d, and `test_bartik.py` holds hand-checked tests (including a 2SLS
   that must recover known slopes exactly).
 
+## Part 5: which specification choice makes the two Fed papers disagree? (sc-ms-v1)
+
+We read Murphy and Shaheen's paper in full. They say their long-difference results differ from
+LMW's mainly because they weight by population and use continuous measures. Two other
+differences can be read off their printed equations:
+
+1. **The elasticity's own term.** Their long-difference equations leave out the elasticity's
+   own term. LMW's include it. Income growth is positive almost everywhere, so "income growth
+   x elasticity" behaves much like the elasticity itself. Without that term, it can pick up any
+   reason elastic metros grew faster. One symptom: the estimate then even depends on the price
+   deflator.
+2. **The national cycle.** In their annual panel, year effects do not absorb elasticity x the
+   national income path. The result could therefore come from elastic metros riding the
+   national boom and bust differently, not from their response to their own income.
+
+Part 5 fits the full 2 x 2 x 2 grid on open data: weights, measure, and main effect left out or
+included. It also fits M-S's annual design with and without elasticity-by-year effects, and
+splits income into its national and local parts.
+
+- [PREREGISTRATION-MS.md](PREREGISTRATION-MS.md) has the design, the predictions P1-P9 with
+  probabilities, and how each pattern will be read.
+- `ms.py` runs it. `fetch_deps_ms.py` gets `sc_analysis.py` and `reconcile.py` at commit
+  0e6c10d. `test_ms.py` holds hand-checked tests, including the deflator symptom on a worked
+  example and Driscoll-Kraay standard errors computed by hand.
+
 ```sh
 pip install -r requirements.txt
-python -m unittest -v test_sc_analysis test_reconcile test_remote test_bartik
+python -m unittest -v test_sc_analysis test_reconcile test_remote test_bartik test_ms
 python sc_analysis.py --data-dir data --out-dir out
 python reconcile.py --data-dir data --out-dir out
 python remote.py --data-dir data --out-dir out
 python bartik.py --data-dir data --out-dir out
+python ms.py --data-dir data --out-dir out
 ```
 
 ## Status
 
-- **2026-11-17:** part 1's pre-registration and code are published, and its run is queued.
-- **2026-11-17 (later):** part 2's pre-registration and code are published, and its run is
-  queued.
-- **2026-11-17 (later):** part 3's pre-registration and code are published, and its run is
-  queued.
-- **2026-11-17 (later):** part 4's pre-registration and code are published, and its run is
-  queued.
-- Results from all four will be added under `results/`, unedited, whichever way they come out.
+- **2026-11-17:** the pre-registrations and code for parts 1-5 were published. Each run is
+  queued, and no part has produced a result yet.
+- Results from all five will be added under `results/`, unedited, whichever way they come out.
 
 ## Credits and licence
 
-The data belong to their publishers: FHFA, BEA, the U.S. Census Bureau, OMB, and Baum-Snow and
-Han (replication data, CC0). This project is not endorsed by any of them, or by the authors whose
-papers it tests.
+The data belong to their publishers: FHFA, BEA, the U.S. Census Bureau, OMB, the Federal Reserve
+Bank of St. Louis (FRED), and Baum-Snow and Han (replication data, CC0). This project is not
+endorsed by any of them, or by the authors whose papers it tests.
 
 Made by MV2 of Munim, Inc. (mv2@munimtech.com), with AI agents. Code is Apache-2.0 (see
 LICENSE); text and results are CC BY 4.0. This is research, not investment advice.
