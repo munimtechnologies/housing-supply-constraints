@@ -15,7 +15,8 @@ All inputs are public:
 - FHFA county and metro house price indexes
 - BEA county and metro personal income and population
 - Census Building Permits Survey county permits
-- Census county housing-unit counts (2000, 2010, 2020) and estimates (2020-2025)
+- Census County Business Patterns county employment by industry (2010, 2019)
+- Census county housing-unit counts (2000, 2010, 2020) and estimates (2010-2025)
 - Census American Community Survey commuting table B08301 (2015-2019 and 2019-2023)
 - OMB 2023 metro delineations and the 2020 Census Gazetteer
 - Baum-Snow and Han (2024, JPE) tract-level supply elasticities
@@ -58,12 +59,30 @@ constrained cores with elastic suburbs.
 - `remote.py` runs it. `fetch_deps.py` gets `sc_analysis.py` and `reconcile.py` at commit
   993d76d, and `test_remote.py` holds hand-checked tests.
 
+## Part 4: do measured elasticities predict the response to a later job shock? (sc-bartik-v1)
+
+Baum-Snow and Han's elasticities are built from 1990 and 2000 commuting data. Part 4 takes a
+job shock that came afterwards: a county shift-share ("Bartik") shock for 2010-2019, from each
+county's 2010 industry mix and the national growth of each industry outside that county. It
+asks whether the counties measured as least elastic turned the shock into higher prices rather
+than more homes. It also estimates the **realised supply curve** for each elasticity group: the
+percent price growth per percent growth in homes caused by the same shock (two-stage least
+squares). Supply theory says it should be steepest where supply is measured as least elastic.
+The same test is run on metros (LMW's unit) and within metros.
+
+- [PREREGISTRATION-BARTIK.md](PREREGISTRATION-BARTIK.md) has the design, the predictions B1-B8
+  with probabilities, and how each pattern will be read.
+- `bartik.py` runs it. `fetch_deps_bartik.py` gets `sc_analysis.py`, `reconcile.py` and
+  `remote.py` at commit 0e6c10d, and `test_bartik.py` holds hand-checked tests (including a 2SLS
+  that must recover known slopes exactly).
+
 ```sh
 pip install -r requirements.txt
-python -m unittest -v test_sc_analysis test_reconcile test_remote
+python -m unittest -v test_sc_analysis test_reconcile test_remote test_bartik
 python sc_analysis.py --data-dir data --out-dir out
 python reconcile.py --data-dir data --out-dir out
 python remote.py --data-dir data --out-dir out
+python bartik.py --data-dir data --out-dir out
 ```
 
 ## Status
@@ -73,7 +92,9 @@ python remote.py --data-dir data --out-dir out
   queued.
 - **2026-11-17 (later):** part 3's pre-registration and code are published, and its run is
   queued.
-- Results from all three will be added under `results/`, unedited, whichever way they come out.
+- **2026-11-17 (later):** part 4's pre-registration and code are published, and its run is
+  queued.
+- Results from all four will be added under `results/`, unedited, whichever way they come out.
 
 ## Credits and licence
 
