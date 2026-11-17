@@ -15,8 +15,9 @@ All inputs are public:
 - FHFA county and metro house price indexes
 - BEA county and metro personal income and population
 - Census Building Permits Survey county permits
-- Census county housing-unit counts (2000, 2010, 2020)
-- OMB 2023 metro delineations
+- Census county housing-unit counts (2000, 2010, 2020) and estimates (2020-2025)
+- Census American Community Survey commuting table B08301 (2015-2019 and 2019-2023)
+- OMB 2023 metro delineations and the 2020 Census Gazetteer
 - Baum-Snow and Han (2024, JPE) tract-level supply elasticities
 
 ## Part 1: counties (sc-county-v1)
@@ -43,11 +44,26 @@ This separates the effect of geography from that of horizon and specification.
 - `reconcile.py` runs it and reuses `sc_analysis.py`. `test_reconcile.py` holds hand-checked
   tests, including a two-way fixed-effects example worked by hand.
 
+## Part 3: one outside demand shock, compared within metros (sc-remote-v1)
+
+Income growth is not an outside shock, which is the main objection to LMW. Part 3 uses the
+shift to remote work instead: each county's 2015-2019 work-from-home share (the instrument in
+Mondragon and Wieland's remote-work paper). It asks whether this shock turned into prices in
+constrained counties and into new homes in elastic ones, **comparing counties within the same
+metro area** (metro fixed effects). Both earlier papers compare whole metros, which mixes
+constrained cores with elastic suburbs.
+
+- [PREREGISTRATION-REMOTE.md](PREREGISTRATION-REMOTE.md) has the design, the predictions Q1-Q7
+  with probabilities, and how each pattern will be read.
+- `remote.py` runs it. `fetch_deps.py` gets `sc_analysis.py` and `reconcile.py` at commit
+  993d76d, and `test_remote.py` holds hand-checked tests.
+
 ```sh
 pip install -r requirements.txt
-python -m unittest -v test_sc_analysis test_reconcile
+python -m unittest -v test_sc_analysis test_reconcile test_remote
 python sc_analysis.py --data-dir data --out-dir out
 python reconcile.py --data-dir data --out-dir out
+python remote.py --data-dir data --out-dir out
 ```
 
 ## Status
@@ -55,7 +71,9 @@ python reconcile.py --data-dir data --out-dir out
 - **2026-11-17:** part 1's pre-registration and code are published, and its run is queued.
 - **2026-11-17 (later):** part 2's pre-registration and code are published, and its run is
   queued.
-- Results from both will be added under `results/`, unedited, whichever way they come out.
+- **2026-11-17 (later):** part 3's pre-registration and code are published, and its run is
+  queued.
+- Results from all three will be added under `results/`, unedited, whichever way they come out.
 
 ## Credits and licence
 
