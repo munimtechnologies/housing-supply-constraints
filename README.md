@@ -3,12 +3,12 @@
 Do housing supply constraints explain where U.S. house prices and housing quantity grew?
 
 This is an open, **pre-registered**, county-level test of a contested claim. Louie, Mondragon
-and Wieland (2025, NBER w33576) report that across U.S. metro areas from 2000 to 2020, income
-growth predicts the same growth in house prices, housing quantity and population whatever the
-local housing supply elasticity. If true, it challenges the standard view that hard-to-build
-places turn demand into higher prices rather than more homes. In October 2026, Murphy and
-Shaheen (Dallas Fed WP 2635) answered that supply constraints *do* explain permits and prices,
-using annual metro data with fixed effects.
+and Wieland (2025, NBER w33576; revised as FRBSF Working Paper 2025-06, February 2026) report that
+across U.S. metro areas from 2000 to 2020, income growth predicts the same growth in house prices,
+housing quantity and population whatever the local housing supply elasticity. If true, it
+challenges the standard view that hard-to-build places turn demand into higher prices rather than
+more homes. In October 2026, Murphy and Shaheen (Dallas Fed WP 2635) answered that supply
+constraints *do* explain permits and prices, using annual metro data with fixed effects.
 
 All inputs are public:
 
@@ -20,7 +20,7 @@ All inputs are public:
 - Census American Community Survey commuting table B08301 (2015-2019 and 2019-2023)
 - OMB 2023 metro delineations and the 2020 Census Gazetteer
 - Baum-Snow and Han (2024, JPE) tract-level supply elasticities
-- The PCE price index (BEA, via FRED)
+- The PCE price index (BEA, via FRED) and the CPI-U (BLS, via FRED)
 
 ## Part 1: counties (sc-county-v1)
 
@@ -102,27 +102,50 @@ splits income into its national and local parts.
   0e6c10d. `test_ms.py` holds hand-checked tests, including the deflator symptom on a worked
   example and Driscoll-Kraay standard errors computed by hand.
 
+## Part 5b: LMW's own cell, exactly (sc-lmw-v1)
+
+After filing part 5 we read LMW's February 2026 revision in full. Part 5's "LMW cell" splits
+metros at the **mean** elasticity. LMW split at the **median** (pp. 19, 22, 25 and the notes to
+their Tables II-IV), deflate by the CPI and use annualized percent growth (p. 17). Part 5b runs
+LMW's exact cell for the Baum-Snow-Han elasticity on open data and sets each estimate next to the
+number LMW publish. It also re-runs two of their supply-curve estimates:
+
+- Table IV: the 2SLS elasticity in less and more constrained metros.
+- Table IX: one supply curve estimated twice, once with per-capita income and once with
+  population as the instrument (0.2 and 1.5 in LMW). This gap is their evidence that housing
+  has two margins, quality and quantity.
+
+A 2 x 2 bridge (split x units) shows how much each difference moves part 5's P2.
+
+- [PREREGISTRATION-LMW.md](PREREGISTRATION-LMW.md) has the comparison table, the predictions
+  Q1-Q7 with probabilities, and how each result will be read.
+- `lmw.py` runs it. `fetch_deps_lmw.py` gets `ms.py` at commit 1e1d533 and `sc_analysis.py` and
+  `reconcile.py` at 0e6c10d. `test_lmw.py` holds hand-checked tests.
+
 ```sh
 pip install -r requirements.txt
-python -m unittest -v test_sc_analysis test_reconcile test_remote test_bartik test_ms
+python -m unittest -v test_sc_analysis test_reconcile test_remote test_bartik test_ms test_lmw
 python sc_analysis.py --data-dir data --out-dir out
 python reconcile.py --data-dir data --out-dir out
 python remote.py --data-dir data --out-dir out
 python bartik.py --data-dir data --out-dir out
 python ms.py --data-dir data --out-dir out
+python lmw.py --data-dir data --out-dir out
 ```
 
 ## Status
 
 - **2026-11-17:** the pre-registrations and code for parts 1-5 were published. Each run is
-  queued, and no part has produced a result yet.
-- Results from all five will be added under `results/`, unedited, whichever way they come out.
+  queued.
+- **2026-11-18:** part 5b was pre-registered and published. A dated note was added to
+  PREREGISTRATION-MS.md about LMW's median split. No part has produced a result yet.
+- Results from all parts will be added under `results/`, unedited, whichever way they come out.
 
 ## Credits and licence
 
-The data belong to their publishers: FHFA, BEA, the U.S. Census Bureau, OMB, the Federal Reserve
-Bank of St. Louis (FRED), and Baum-Snow and Han (replication data, CC0). This project is not
-endorsed by any of them, or by the authors whose papers it tests.
+The data belong to their publishers: FHFA, BEA, BLS, the U.S. Census Bureau, OMB, the Federal
+Reserve Bank of St. Louis (FRED), and Baum-Snow and Han (replication data, CC0). This project is
+not endorsed by any of them, or by the authors whose papers it tests.
 
 Made by MV2 of Munim, Inc. (mv2@munimtech.com), with AI agents. Code is Apache-2.0 (see
 LICENSE); text and results are CC BY 4.0. This is research, not investment advice.

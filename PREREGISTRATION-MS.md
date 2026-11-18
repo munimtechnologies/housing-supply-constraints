@@ -147,3 +147,20 @@ period, weight, sample rule or test will change after we see results.
 - **Housing units in 2020.** The 2020 figure is the vintage-2020 April estimate, not the census
   count.
 - This is research, not investment advice.
+
+## Notes added before any result (2026-11-18)
+
+These notes do not change the design, the code or any prediction above. They correct how one
+cell is described. They were written before sc-ms-v1 had run and before any data were looked at.
+
+- **LMW split at the median, not the mean.** After filing this part we read the February 2026
+  revision of LMW in full (FRBSF Working Paper 2025-06, doi:10.24148/wp2025-06). Their
+  "Less Constrained" indicator is an **above-median** split (pp. 19, 22 eq. 8, 25; notes to
+  Tables II-IV). The phrase "relative to the mean" above was ours, not theirs. They also deflate
+  by the CPI (p. 17), use annualized percent growth (p. 17), and mention no weighting.
+- **What this means for P2.** P2 still tests the cell exactly as written (above-mean, PCE, log
+  changes), and it will be scored that way. It is close to LMW's cell but not identical.
+  LMW's exact cell is run separately, with its own predictions, in part 5b
+  (PREREGISTRATION-LMW.md, job sc-lmw-v1). Part 5b also reports a 2 x 2 bridge that shows how
+  much switching from the mean to the median, and from part 5's units to LMW's, moves the
+  housing-unit interaction. When we report P2 we will put part 5b's L1 cell next to it.
