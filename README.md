@@ -18,6 +18,8 @@ All inputs are public:
 - Census County Business Patterns county employment by industry (2010, 2019)
 - Census county housing-unit counts (2000, 2010, 2020) and estimates (2010-2025)
 - Census American Community Survey commuting table B08301 (2015-2019 and 2019-2023)
+- IRS Statistics of Income county data: returns and adjusted gross income by income class (2011,
+  2019, 2022)
 - OMB 2023 metro delineations and the 2020 Census Gazetteer
 - Baum-Snow and Han (2024, JPE) tract-level supply elasticities
 - The PCE price index (BEA, via FRED) and the CPI-U (BLS, via FRED)
@@ -122,15 +124,44 @@ A 2 x 2 bridge (split x units) shows how much each difference moves part 5's P2.
 - `lmw.py` runs it. `fetch_deps_lmw.py` gets `ms.py` at commit 1e1d533 and `sc_analysis.py` and
   `reconcile.py` at 0e6c10d. `test_lmw.py` holds hand-checked tests.
 
+## Part 6: inequality or regulation? (sc-ineq-v1)
+
+In August 2026 Louie, Mondragon, Najjar and Wieland ("Quality, Inequality and Understanding
+Housing Markets") argued that there is no single housing supply elasticity:
+
+- Rich households buy housing *quality*, which is scarce.
+- Poorer households buy *units*, which are easy to add.
+- So whether demand becomes prices or homes depends on **who** holds and gains the income, and
+  not only on how hard it is to build.
+
+They support this only indirectly. Part 6 tests it head on: for U.S. metros from 2011 to 2019, it
+races a measure of the local income distribution against the measured supply elasticity.
+
+- **Inequality measure:** the share of income on tax returns of $200,000 or more (IRS county
+  data), with top-income growth measured above a fixed *real* threshold so that inflation does
+  not count as concentration.
+- **Supply measure:** the Baum-Snow-Han elasticity.
+- **Question:** which one predicts whether income growth turned into prices or into homes?
+
+If inequality wins, that is direct evidence for the two-margin view in a debate that until now has
+been argued mostly in theory and simulation.
+
+- [PREREGISTRATION-INEQ.md](PREREGISTRATION-INEQ.md) has the design, the predictions I1-I8 with
+  probabilities, and how each result will be read.
+- `ineq.py` runs it. `fetch_deps_ineq.py` gets `ms.py` at commit 1e1d533 and `sc_analysis.py` and
+  `reconcile.py` at 0e6c10d. `test_ineq.py` holds hand-checked tests, including the Pareto
+  real-threshold step worked by hand.
+
 ```sh
 pip install -r requirements.txt
-python -m unittest -v test_sc_analysis test_reconcile test_remote test_bartik test_ms test_lmw
+python -m unittest -v test_sc_analysis test_reconcile test_remote test_bartik test_ms test_lmw test_ineq
 python sc_analysis.py --data-dir data --out-dir out
 python reconcile.py --data-dir data --out-dir out
 python remote.py --data-dir data --out-dir out
 python bartik.py --data-dir data --out-dir out
 python ms.py --data-dir data --out-dir out
 python lmw.py --data-dir data --out-dir out
+python ineq.py --data-dir data --out-dir out
 ```
 
 ## Status
@@ -138,14 +169,16 @@ python lmw.py --data-dir data --out-dir out
 - **2026-11-17:** the pre-registrations and code for parts 1-5 were published. Each run is
   queued.
 - **2026-11-18:** part 5b was pre-registered and published. A dated note was added to
-  PREREGISTRATION-MS.md about LMW's median split. No part has produced a result yet.
+  PREREGISTRATION-MS.md about LMW's median split.
+- **2026-11-19:** part 6 was pre-registered and published. No part has produced a result yet.
 - Results from all parts will be added under `results/`, unedited, whichever way they come out.
 
 ## Credits and licence
 
-The data belong to their publishers: FHFA, BEA, BLS, the U.S. Census Bureau, OMB, the Federal
-Reserve Bank of St. Louis (FRED), and Baum-Snow and Han (replication data, CC0). This project is
-not endorsed by any of them, or by the authors whose papers it tests.
+The data belong to their publishers: FHFA, BEA, BLS, the U.S. Census Bureau, the IRS Statistics
+of Income Division, OMB, the Federal Reserve Bank of St. Louis (FRED), and Baum-Snow and Han
+(replication data, CC0). This project is not endorsed by any of them, or by the authors whose
+papers it tests.
 
 Made by MV2 of Munim, Inc. (mv2@munimtech.com), with AI agents. Code is Apache-2.0 (see
 LICENSE); text and results are CC BY 4.0. This is research, not investment advice.
