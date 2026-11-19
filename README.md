@@ -143,8 +143,15 @@ races a measure of the local income distribution against the measured supply ela
 - **Supply measure:** the Baum-Snow-Han elasticity.
 - **Question:** which one predicts whether income growth turned into prices or into homes?
 
-If inequality wins, that is direct evidence for the two-margin view in a debate that until now has
-been argued mostly in theory and simulation.
+The closest empirical work is Liu, Lou and Xiang ("Income Inequality, Housing Supply, and House
+Prices"; earlier SSRN 4787863). On counties from 1990 to 2017, with an instrument for the Gini
+coefficient, they find that more unequal counties have higher prices and fewer new homes. They
+attribute this to the **supply side**: inequality brings tighter regulation. LMNW's channel is on
+the **demand side**: the rich buy quality. Part 6 can help tell these apart. If inequality acts
+only through regulation that the measured elasticity captures, its interaction with income growth
+should fade once the elasticity's interaction is in the model. If it survives, that points to
+LMNW's demand-side margin. A dated note in the pre-registration records this prior work. It was
+added before any data were seen and changes no prediction.
 
 - [PREREGISTRATION-INEQ.md](PREREGISTRATION-INEQ.md) has the design, the predictions I1-I8 with
   probabilities, and how each result will be read.
@@ -170,7 +177,11 @@ python ineq.py --data-dir data --out-dir out
   queued.
 - **2026-11-18:** part 5b was pre-registered and published. A dated note was added to
   PREREGISTRATION-MS.md about LMW's median split.
-- **2026-11-19:** part 6 was pre-registered and published. No part has produced a result yet.
+- **2026-11-19:** part 6 was pre-registered and published. Later that day, still before any data
+  were seen, a dated note was added to PREREGISTRATION-INEQ.md on the prior work by Liu, Lou and
+  Xiang. A pipeline check was also queued. It runs every part's tests at the commit that part was
+  published with, checks every data source, and runs part 6's IRS income-class check. It reads no
+  outcome data. No part has produced a result yet.
 - Results from all parts will be added under `results/`, unedited, whichever way they come out.
 
 ## Credits and licence

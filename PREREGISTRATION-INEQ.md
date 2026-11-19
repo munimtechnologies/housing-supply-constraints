@@ -152,4 +152,41 @@ either side (I3, I4) is less likely than not.
 
 ## Deviations
 
-None yet.
+None to the plan. One dated note follows.
+
+### Note added 2026-11-19 (later the same day), before any data were seen: prior work we missed
+
+The job sc-ineq-v1 had not run when this note was written, so nobody working on this project had
+seen any of its data. This note changes **no** data rule, model, prediction, probability or
+reading rule above. It corrects the "What is new here" paragraph, which missed one closely
+related empirical paper:
+
+- **Liu, Lou and Xiang, "Income Inequality, Housing Supply, and House Prices"** (working paper;
+  earlier version "Income Inequality, House Prices, and Housing Regulations", SSRN 4787863, April
+  2024, revised April 2025; current version on Chao Liu's website,
+  https://chaoliu-cuhk.github.io/). On U.S. counties from 1990 to 2017, with a Bartik-type
+  instrument for the Gini coefficient built from 90 occupation-income groups, they report that a
+  one standard deviation higher Gini raises house prices by about 30% and cuts building permits by
+  44% over the next ten years. They report that the effects are stronger where supply is less
+  elastic. Their mechanism is on the **supply side**: inequality brings tighter land-use regulation
+  and more resistance to pro-supply reforms. (Figures are from the authors' own summaries; we have
+  not yet read the full paper.)
+
+So the claim "no study has put a measure of the local income distribution against a measured
+supply elasticity" is too strong as written: Liu, Lou and Xiang do study inequality together with
+supply elasticity, though as a moderator of inequality's effect rather than as a rival
+explanation. What part 6 still adds, as far as we know:
+
+1. It asks the LMNW question, how the **same income growth** splits into prices and units
+   depending on the income distribution (Y x S), not how inequality affects price levels.
+2. It conditions that interaction on the measured elasticity's own interaction (Y x Ez), the
+   horse race R3.
+3. It splits income growth by **who** received it, above and below a fixed real threshold (R4),
+   which is LMNW's "shock dependence".
+
+The two explanations of an inequality effect make different predictions in R3, which helps read
+the results (again, this changes no reading rule). If inequality works only through regulation
+(Liu, Lou and Xiang's channel), and the Baum-Snow-Han elasticity captures that regulation, then Y x S
+should shrink once Y x Ez is in the model. If the inequality interaction survives that control, it
+points to LMNW's demand-side channel, or to regulation the elasticity does not capture. Both
+readings will be stated with the results.
